@@ -1,0 +1,6 @@
+In add-on projects, you should NOT put anything to this directory. Vaadin
+tooling might still autogenerate somethign here, but just ignore this.
+
+E.g. Client side resources that should be available for addon users should go to:
+src/main/resources/META-INF/resources
+

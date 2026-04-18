@@ -1,0 +1,17 @@
+.color-text-field-button {
+	display: inline-block;
+	/* border: 1px solid gray; */
+	border-radius: 5%;
+	box-sizing: border-box;
+}
+
+.color-text-field-button:hover {
+	border-color: black;
+}
+
+.stripes {
+  width: 30px;
+  height: 24px;
+  background: repeating-linear-gradient(-45deg, darkgray, darkgray 2px, white 2px, white 5px);
+  border: 1px solid darkgray;
+}
