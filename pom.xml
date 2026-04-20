@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.vaadin.addons.sauersitrone</groupId>
@@ -11,7 +11,7 @@
     <description>TextField extension for selecting colors in Vaadin Flow applications.</description>
 
     <properties>
-       <vaadin.version>24.7.2</vaadin.version>
+        <vaadin.version>24.7.2</vaadin.version>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.source>21</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,7 +52,8 @@
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
-            <!-- Consider limiting the dependencies to flow-server only something, but for most end users depending on vaadin-core is ok -->
+            <!-- Consider limiting the dependencies to flow-server only something, but for most end
+            users depending on vaadin-core is ok -->
             <artifactId>vaadin-core</artifactId>
         </dependency>
         <dependency>
@@ -84,14 +85,14 @@
             <optional>true</optional>
         </dependency>
 
-        
+
         <!-- https://github.com/ngageoint/color-java -->
         <dependency>
             <groupId>mil.nga</groupId>
             <artifactId>color</artifactId>
             <version>1.0.0</version>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -117,7 +118,7 @@
                     <excludes>
                         <exclude>META-INF/VAADIN/config/flow-build-info.json</exclude>
                     </excludes>
-                </configuration>                     
+                </configuration>
             </plugin>
 
             <plugin>
