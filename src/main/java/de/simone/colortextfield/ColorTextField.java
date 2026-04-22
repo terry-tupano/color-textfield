@@ -124,10 +124,10 @@ public class ColorTextField extends TextField {
                 colorButton.setHeight("14px");
                 colorButton.getStyle().set("margin", "0");
                 colorRow.add(colorButton);
-            }
+            } 
         }
 
-        // monochrome pattern
+        // monochrome patternddd
         boolean isFirst = true;
         for (String[] row : monoColors) {
             HorizontalLayout colorRow = Utils.getCompactHorizontalLayout();
