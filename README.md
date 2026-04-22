@@ -1,62 +1,126 @@
-# Vaadin Add-on example project
+# Text color picker for Vaadin Flow
+Extention of Vaading `TextField` that allows users to input and select colors. The ColorTextField provides a color preview, a color picker popover with predefined colors, and a history of selected colors. The component supports both hexadecimal color codes and CSS color names.
 
-An empty project for creating a Vaadin add-on. You should start from this project if your add-on's components are based on the existing Vaadin classes or doesn't use 3rd party JavaScript modules.
-
-## Add-on architecture
-![server-side-addon](https://user-images.githubusercontent.com/991105/211870086-75544597-847d-4d21-82fa-341411753558.svg)
-
-## Alternative add-on templates
-
-If you wish to build and publish an add-on or extension in [Vaadin Directory](https://vaadin.com/directory), Vaadin provides the following three template projects:
- 1. **(this repo)** [vaadin/addon-template](https://github.com/vaadin/addon-template): Create a composite component. This Java-only template is the easiest when extending Vaadin Java components.
- 2. [vaadin/client-server-addon-template](https://github.com/vaadin/client-server-addon-template): Build a standalone, client-server TypeScript-Java component. This template provides you with a [Lit-based](https://github.com/lit/lit/) example to start with.
- 3. [vaadin/npm-addon-template](https://github.com/vaadin/npm-addon-template): Wrap a web component from [npmjs.com](https://npmjs.com/) as a Vaadin Java component.
+This implementation is inspired by the color picker component from Microsoft Office 2010. I took ideas from a similar 100% JavaScript componentfound [here](https://github.com/evoluteur/colorpicker)
 
 
-## Development instructions
+## Example Code
+The followin code is extracted from `ColorTextFieldTest.java` in test directory.
+```java
 
-### Important Files 
-* TheAddon.java: this is the addon-on component class. You can add more classes if you wish, including other Components.
-* TestView.java: A View class that let's you test the component you are building. This and other classes in the test folder will not be packaged during the build. You can add more test view classes in this package.
-* assembly/: this folder includes configuration for packaging the project into a JAR so that it works well with other Vaadin projects and the Vaadin Directory. There is usually no need to modify these files, unless you need to add JAR manifest entries.
+public class ColorTextFieldTest extends VerticalLayout {
 
-If you are using static resources such as images, JS (e.g. templates) and CSS files the correct location for them is under the `/src/main/resources/META-INF/resources/frontend` directory and is described here [Resource Cheat Sheet](https://vaadin.com/docs/v14/flow/importing-dependencies/tutorial-ways-of-importing.html#resource-cheat-sheet)in more details. 
+	private static List<String> staticHistory = new ArrayList<>();
 
-### Deployment
+	public ColorTextFieldTest() {
 
-Starting the test/demo server:
+		// Placeholder components
+		TextField firstName = new TextField("First Name");
+		firstName.setValue("Terry");
+		TextField lastName = new TextField("Last Name");
+		lastName.setValue("Tupano");
+
+		ColorTextField errorColor = new ColorTextField("Error");
+		errorColor.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		errorColor.setHelperText("This color text was set with an invalid color name.");
+		errorColor.setValue("blablabla");
+
+		ColorTextField successColor = new ColorTextField("Success");
+		successColor.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		successColor.setHelperText("This color text was set with a valid color name.");
+		successColor.setValue("green");
+
+		// placeholder component
+		TextField addressField = new TextField("Address");
+		addressField.setValue("123 Hauptstraße, 01067 Dresden, Deutschland");
+
+		ColorTextField noColor = new ColorTextField("No Color");
+		noColor.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		noColor.setHelperText("This color text has no color set.");
+
+		ColorTextField noHistory = new ColorTextField("No History", false);
+		noHistory.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		noHistory.setValue("tomato");
+		noHistory.setHelperText("This color text don't track and show color history.");
+
+		ValueProvider<Object, List<String>> historyProvider = v -> staticHistory;
+
+		Span historyInfo = new Span(
+				"The color history left and right components share a common history value provider, which is backed by a static list in the demo view. "
+						+ "Similar provider can be used to store in DB or set the history according to user or other criteria.");
+		historyInfo.getStyle().set("border", "1px solid var(--lumo-primary-color)");
+		historyInfo.getStyle().set("background-color", "var(--lumo-primary-color-10pct)");
+		historyInfo.getStyle().set("padding", "0.5rem");
+		historyInfo.getStyle().set("border-radius", "4px");
+
+		ColorTextField historyColor1 = new ColorTextField("Color History Left");
+		historyColor1.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		historyColor1.setHelperText("This color text share a common history value provider.");
+		historyColor1.setHistoryValueProvider(historyProvider);
+
+		ColorTextField historyColor2 = new ColorTextField("Color History Right");
+		historyColor2.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		historyColor2.setHelperText("This color text share a common history value provider.");
+		historyColor2.setHistoryValueProvider(historyProvider);
+
+		Hr hr = new Hr();
+
+		// the components
+		FormLayout formLayout = new FormLayout(firstName, lastName, errorColor, successColor, addressField, noColor,
+				noHistory, hr,  historyInfo, historyColor1, historyColor2);
+		formLayout.setColspan(addressField, 2);
+		formLayout.setColspan(hr, 2);
+		formLayout.setColspan(historyInfo, 2);
+
+		// the title
+		H2 header = new H2("Text Color Picker Extension for Vaadin Flow");
+		header.getStyle().set("text-align", "center");
+
+		// the footer
+		String description = """
+				This is a demo view showcasing the Text color picker extension for Vaadin Flow.
+				<p> This implementation is inspired by the color picker component from Microsoft Office 2010. I took ideas from a similar 100% JavaScript component: <a href='https://github.com/evoluteur/colorpicker' target='_blank'>evoluteur</a>.
+				""";
+		Span footerSpan = new Span();
+		footerSpan.getElement().setProperty("innerHTML", description);
+		footerSpan.getStyle().set("font-size", "0.8rem");
+		footerSpan.getStyle().set("text-align", "center");
+
+		VerticalLayout components = new VerticalLayout();
+		components.setAlignItems(Alignment.STRETCH);
+		components.add(header, formLayout, footerSpan);
+		components.setWidth("40%");
+
+		add(components);
+		setAlignItems(Alignment.CENTER);
+	}
+}
 ```
-mvn jetty:run -Pdevelopment
-```
 
-This deploys demo at http://localhost:8080
+
+## install
+Install the component using Vaadin Directory.
+
+Tested versions: Vaadin 24
+
+
+<!-- ## Download release
+[Available in Vaadin Directory](https://vaadin.com/directory/component/color-textfield)
+ -->
  
-### Integration test
+## Building and running demo
+- git clone repository
+- mvn jetty:run
+- navigate to http://localhost:8080/ and you will see this
 
-To run Integration Tests, execute `mvn verify -Pit,production`.
+<p align="center">
+    <img src="./docs/demo31.png" alt="Demo" width="1020">
+    <img src="./docs/demo32.png" alt="Demo" width="1020">
+    <img src="./docs/demo33.png" alt="Demo" width="1020">
+</p>
 
-Tests run by default in `headless` mode, to avoid browser windows to be opened for every test.
-This behaviour is always disabled when running the tests in debug mode in the IDE
-or when running maven with the `-Dmaven.failsafe.debug` sytem property.
-On normal execution, headless mode can be deactivated using the `-Dtest.headless=false` system property.
 
-## Publishing to Vaadin Directory
+## License & Author
+This add-on is distributed under Apache License 2.0. For license terms, see LICENSE file.
 
-You should change the `organization.name` property in `pom.xml` to your own name/organization.
-
-```
-    <organization>
-        <name>###author###</name>
-    </organization>
-```
-
-You can create the zip package needed for [Vaadin Directory](https://vaadin.com/directory/) using
-
-```
-mvn versions:set -DnewVersion=1.0.0 # You cannot publish snapshot versions 
-mvn clean package -Pdirectory
-```
-
-The package is created as `target/{project-name}-1.0.0.zip`
-
-For more information or to upload the package, visit https://vaadin.com/directory/my-components?uploadNewComponent
+ColorTextField add-on for Vaadin Flow is written by Terry Tupano.
