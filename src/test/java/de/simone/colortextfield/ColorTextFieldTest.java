@@ -1,24 +1,122 @@
+/*-
+ * #%L
+ * TrendChart Add-on for vaadin Flow
+ * %%
+ * Copyright (C) 2026 Terry Tupano
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package de.simone.colortextfield;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 
 @Route("")
 public class ColorTextFieldTest extends VerticalLayout {
 
-    public ColorTextFieldTest() {
-        TextField firstName = new TextField("First Name");
-        TextField lastName = new TextField("Last Name");
-        ColorTextField favoriteColor = new ColorTextField("Favorite Color");
-        TextField addressField = new TextField("Address");
-        ColorTextField houseColor = new ColorTextField("House Color");
+	private static List<String> staticHistory = new ArrayList<>();
 
-        FormLayout formLayout = new FormLayout(firstName, lastName, favoriteColor, addressField, houseColor);
-        formLayout.setColspan(addressField, 2);
+	public ColorTextFieldTest() {
 
-        favoriteColor.setValue("getTestId()");
-        add(formLayout);
-    }
+		// Placeholder components
+		TextField firstName = new TextField("First Name");
+		firstName.setValue("Terry");
+		TextField lastName = new TextField("Last Name");
+		lastName.setValue("Tupano");
+
+		ColorTextField errorColor = new ColorTextField("Error");
+		errorColor.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		errorColor.setHelperText("This color text was set with an invalid color name.");
+		errorColor.setValue("blablabla");
+
+		ColorTextField successColor = new ColorTextField("Success");
+		successColor.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		successColor.setHelperText("This color text was set with a valid color name.");
+		successColor.setValue("green");
+
+		// placeholder component
+		TextField addressField = new TextField("Address");
+		addressField.setValue("123 Hauptstraße, 01067 Dresden, Deutschland");
+
+		ColorTextField noColor = new ColorTextField("No Color");
+		noColor.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		noColor.setHelperText("This color text has no color set.");
+
+		ColorTextField noHistory = new ColorTextField("No History", false);
+		noHistory.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		noHistory.setValue("tomato");
+		noHistory.setHelperText("This color text don't track and show color history.");
+
+		ValueProvider<Object, List<String>> historyProvider = v -> staticHistory;
+
+		Span historyInfo = new Span(
+				"The color history left and right components share a common history value provider, which is backed by a static list in the demo view. "
+						+ "Similar provider can be used to store in DB or set the history according to user or other criteria.");
+		historyInfo.getStyle().set("border", "1px solid var(--lumo-primary-color)");
+		historyInfo.getStyle().set("background-color", "var(--lumo-primary-color-10pct)");
+		historyInfo.getStyle().set("padding", "0.5rem");
+		historyInfo.getStyle().set("border-radius", "4px");
+
+		ColorTextField historyColor1 = new ColorTextField("Color History Left");
+		historyColor1.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		historyColor1.setHelperText("This color text share a common history value provider.");
+		historyColor1.setHistoryValueProvider(historyProvider);
+
+		ColorTextField historyColor2 = new ColorTextField("Color History Right");
+		historyColor2.addThemeVariants(TextFieldVariant.LUMO_HELPER_ABOVE_FIELD);
+		historyColor2.setHelperText("This color text share a common history value provider.");
+		historyColor2.setHistoryValueProvider(historyProvider);
+
+		Hr hr = new Hr();
+
+		// the components
+		FormLayout formLayout = new FormLayout(firstName, lastName, errorColor, successColor, addressField, noColor,
+				noHistory, hr,  historyInfo, historyColor1, historyColor2);
+		formLayout.setColspan(addressField, 2);
+		formLayout.setColspan(hr, 2);
+		formLayout.setColspan(historyInfo, 2);
+
+		// the title
+		H2 header = new H2("Text Color Picker Extension for Vaadin Flow");
+		header.getStyle().set("text-align", "center");
+
+		// the footer
+		String description = """
+				This is a demo view showcasing the Text color picker extension for Vaadin Flow.
+				<p> This implementation is inspired by the color picker component from Microsoft Office 2010. I took ideas from a similar 100% JavaScript component: <a href='https://github.com/evoluteur/colorpicker' target='_blank'>evoluteur</a>.
+				""";
+		Span footerSpan = new Span();
+		footerSpan.getElement().setProperty("innerHTML", description);
+		footerSpan.getStyle().set("font-size", "0.8rem");
+		footerSpan.getStyle().set("text-align", "center");
+
+		VerticalLayout components = new VerticalLayout();
+		components.setAlignItems(Alignment.STRETCH);
+		components.add(header, formLayout, footerSpan);
+		components.setWidth("40%");
+
+		add(components);
+		setAlignItems(Alignment.CENTER);
+	}
 }
