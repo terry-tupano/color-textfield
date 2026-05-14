@@ -1,5 +1,5 @@
 # Text color picker for Vaadin Flow
-Extention of Vaading `TextField` that allows users to input and select colors. The ColorTextField provides a color preview, a color picker popover with predefined colors, and a history of selected colors. The component supports both hexadecimal color codes and CSS color names.
+Extention of Vaadin `TextField` that allows users to input and select colors. The ColorTextField provides a color preview, a color picker popover with predefined colors, and a history of selected colors. The component supports both hexadecimal color codes and commons CSS color names.
 
 This implementation is inspired by the color picker component from Microsoft Office 2010. I took ideas from a similar 100% JavaScript componentfound [here](https://github.com/evoluteur/colorpicker)
 
